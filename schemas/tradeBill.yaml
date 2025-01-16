@@ -1,0 +1,202 @@
+openapi: 3.0.3
+info:
+  title: Bill Events API
+  version: '1.0.0'
+  description: API for bill-related events, including project, line items, approval, and metadata.
+
+paths:
+  /bill-events:
+    post:
+      summary: Publish a bill event
+      operationId: publishBillEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillEvent'
+      responses:
+        '200':
+          description: Event published successfully
+        '400':
+          description: Bad request
+
+components:
+  schemas:
+    BillEvent:
+      type: object
+      required:
+        - bill
+        - project
+        - lineItems
+        - approval
+        - eventMetadata
+      properties:
+        bill:
+          $ref: '#/components/schemas/Bill'
+        project:
+          $ref: '#/components/schemas/Project'
+        lineItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItem'
+        approval:
+          $ref: '#/components/schemas/Approval'
+        eventMetadata:
+          $ref: '#/components/schemas/Metadata'
+
+    Bill:
+      type: object
+      required:
+        - billId
+        - billNumber
+        - tradePartnerBillNumber
+        - tradePartnerId
+        - billType
+        - billSource
+        - billDate
+        - billStatus
+        - totalAmountInCents
+      properties:
+        billId:
+          type: string
+        billNumber:
+          type: string
+        tradePartnerBillNumber:
+          type: string
+        tradePartnerId:
+          type: string
+        tradePartnerName:
+          type: string
+        billType:
+          type: string
+        billSource:
+          type: string
+        billDate:
+          type: string
+          format: date
+          description: "ISO 8601 date format (YYYY-MM-DD)"
+        billStatus:
+          type: string
+        totalAmountInCents:
+          type: integer
+        isTradePartnerCredit:
+          type: boolean
+        paymentTerms:
+          type: string
+        dueDate:
+          type: string
+          format: date
+          description: "ISO 8601 date format (YYYY-MM-DD)"
+        amountPaidInCents:
+          type: integer
+        paidDate:
+          type: string
+          format: date
+          description: "ISO 8601 date format (YYYY-MM-DD)"
+          nullable: true
+        externalSystemBillId:
+          type: string
+        reversalBillId:
+          type: string
+          nullable: true
+        postedDate:
+          type: string
+          format: date
+          description: "ISO 8601 date format (YYYY-MM-DD)"
+
+    Project:
+      type: object
+      required:
+        - projectId
+        - projectName
+        - lotType
+        - projectStatus
+      properties:
+        projectId:
+          type: string
+        projectName:
+          type: string
+        lotType:
+          type: string
+        projectStatus:
+          type: string
+        warrantyStartDate:
+          type: string
+          format: date
+          description: "ISO 8601 date format (YYYY-MM-DD)"
+          nullable: true
+        verticalCompletionDate:
+          type: string
+          format: date
+          description: "ISO 8601 date format (YYYY-MM-DD)"
+          nullable: true
+
+    LineItem:
+      type: object
+      required:
+        - lineId
+        - amountInCents
+        - costCodeId
+        - costCodeNumber
+        - costClassification
+      properties:
+        lineId:
+          type: string
+        amountInCents:
+          type: integer
+        paidInCents:
+          type: integer
+        costCodeId:
+          type: string
+        costCodeNumber:
+          type: string
+        costClassification:
+          type: string
+        costDivision:
+          type: string
+          nullable: true
+        costCodeVersion:
+          type: integer
+        sourceId:
+          type: string
+        description:
+          type: string
+
+    Approval:
+      type: object
+      required:
+        - approvalStatus
+      properties:
+        approvalStatus:
+          type: string
+        approvalDate:
+          type: string
+          format: date-time
+          description: "ISO 8601 UTC date-time format (YYYY-MM-DDThh:mm:ss.sssZ)"
+          nullable: true
+        rejectionDate:
+          type: string
+          format: date-time
+          description: "ISO 8601 UTC date-time format (YYYY-MM-DDThh:mm:ss.sssZ)"
+          nullable: true
+        rejectionReason:
+          type: string
+          nullable: true
+
+    Metadata:
+      type: object
+      required:
+        - eventTimeStamp
+        - schemaVersion
+      properties:
+        idempotencyKey:
+          type: string
+        correlationId:
+          type: string
+        eventTimeStamp:
+          type: string
+          format: date-time
+          description: "ISO 8601 UTC date-time format (YYYY-MM-DDThh:mm:ss.sssZ)"
+        schemaVersion:
+          type: string

@@ -1,0 +1,186 @@
+openapi: 3.0.3
+info:
+  title: Bill Events API
+  version: '1.0.0'
+  description: API for bill-related events, including project, line items, approval, and metadata.
+
+paths:
+  /bill-events:
+    post:
+      summary: Publish a bill event
+      operationId: publishBillEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/BillCreatedEvent'
+                - $ref: '#/components/schemas/BillReversedEvent'
+      responses:
+        '200':
+          description: Event published successfully
+        '400':
+          description: Bad request
+
+components:
+  schemas:
+    BillCreatedEvent:
+      type: object
+      required:
+        - eventType
+        - bill
+        - project
+        - lineItems
+        - eventMetadata
+      properties:
+        eventType:
+          type: string
+          enum: ['billCreated']
+        bill:
+          $ref: '#/components/schemas/BillCreated'
+        project:
+          $ref: '#/components/schemas/Project'
+        lineItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItem'
+        approval:
+          $ref: '#/components/schemas/Approval'
+        eventMetadata:
+          $ref: '#/components/schemas/Metadata'
+
+    BillReversedEvent:
+      type: object
+      required:
+        - eventType
+        - bill
+        - eventMetadata
+      properties:
+        eventType:
+          type: string
+          enum: ['billReversed']
+        bill:
+          $ref: '#/components/schemas/BillReversed'
+        eventMetadata:
+          $ref: '#/components/schemas/Metadata'
+
+    BillCreated:
+      type: object
+      required:
+        - billId
+        - billNumber
+        - tradePartnerId
+        - amount
+        - status
+      properties:
+        billId:
+          type: string
+          format: uuid
+        billNumber:
+          type: string
+        tradePartnerBillNumber:
+          type: string
+        tradePartnerId:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: float
+        status:
+          type: string
+          enum: ['DRAFT', 'SUBMITTED', 'APPROVED', 'REJECTED']
+        submittedDate:
+          type: string
+          format: date-time
+
+    BillReversed:
+      type: object
+      required:
+        - billId
+        - reversalReason
+      properties:
+        billId:
+          type: string
+          format: uuid
+        reversalReason:
+          type: string
+          enum: ['DUPLICATE', 'ERROR', 'OTHER']
+        reversalNote:
+          type: string
+
+    Project:
+      type: object
+      required:
+        - projectId
+        - projectName
+      properties:
+        projectId:
+          type: string
+          format: uuid
+        projectName:
+          type: string
+        projectCode:
+          type: string
+
+    LineItem:
+      type: object
+      required:
+        - lineItemId
+        - amount
+        - description
+      properties:
+        lineItemId:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: float
+        description:
+          type: string
+        costCode:
+          type: string
+        quantity:
+          type: number
+        unitPrice:
+          type: number
+
+    Approval:
+      type: object
+      required:
+        - approvalId
+        - status
+      properties:
+        approvalId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: ['PENDING', 'APPROVED', 'REJECTED']
+        approvedBy:
+          type: string
+        approvedDate:
+          type: string
+          format: date-time
+        comments:
+          type: string
+
+    Metadata:
+      type: object
+      required:
+        - eventId
+        - timestamp
+        - source
+      properties:
+        eventId:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        source:
+          type: string
+        correlationId:
+          type: string
+        userId:
+          type: string

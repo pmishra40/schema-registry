@@ -1,0 +1,298 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "BillEventStack": {
+        "id": "BillEventStack",
+        "path": "BillEventStack",
+        "children": {
+          "BillApprovedEventLambda": {
+            "id": "BillApprovedEventLambda",
+            "path": "BillEventStack/BillApprovedEventLambda",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "BillEventStack/BillApprovedEventLambda/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "BillEventStack/BillApprovedEventLambda/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.175.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BillEventStack/BillApprovedEventLambda/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.175.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.175.1"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "BillEventStack/BillApprovedEventLambda/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "BillEventStack/BillApprovedEventLambda/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.175.1"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "BillEventStack/BillApprovedEventLambda/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.175.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.175.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "BillEventStack/BillApprovedEventLambda/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": "cdk-hnb659fds-assets-721427272662-us-west-2",
+                      "s3Key": "7a5d71282854e1e7fb0ed83cd26d64496e388d187b32b81c0f652739d01753e8.zip"
+                    },
+                    "description": "Handles approved bill events from EventBridge",
+                    "environment": {
+                      "variables": {
+                        "NODE_ENV": "production"
+                      }
+                    },
+                    "handler": "billApprovedEventConsumerLambda.handler",
+                    "role": {
+                      "Fn::GetAtt": [
+                        "BillApprovedEventLambdaServiceRole9051C551",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "nodejs18.x",
+                    "timeout": 30
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.175.1"
+                }
+              },
+              "AllowEventBridge": {
+                "id": "AllowEventBridge",
+                "path": "BillEventStack/BillApprovedEventLambda/AllowEventBridge",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                  "aws:cdk:cloudformation:props": {
+                    "action": "lambda:InvokeFunction",
+                    "functionName": {
+                      "Fn::GetAtt": [
+                        "BillApprovedEventLambda9E1A0B6C",
+                        "Arn"
+                      ]
+                    },
+                    "principal": "events.amazonaws.com",
+                    "sourceArn": {
+                      "Fn::GetAtt": [
+                        "BillApprovedEventRule3ACFA569",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                  "version": "2.175.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.175.1"
+            }
+          },
+          "ExistingEventBus": {
+            "id": "ExistingEventBus",
+            "path": "BillEventStack/ExistingEventBus",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.Resource",
+              "version": "2.175.1"
+            }
+          },
+          "BillApprovedEventRule": {
+            "id": "BillApprovedEventRule",
+            "path": "BillEventStack/BillApprovedEventRule",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "BillEventStack/BillApprovedEventRule/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Events::Rule",
+                  "aws:cdk:cloudformation:props": {
+                    "description": "Rule for handling approved bill events",
+                    "eventBusName": "homebound-events",
+                    "eventPattern": {
+                      "source": [
+                        "homebound.bills"
+                      ],
+                      "detail-type": [
+                        "BillApprovedEvent"
+                      ]
+                    },
+                    "name": "bill-approved-event-rule",
+                    "state": "ENABLED",
+                    "targets": [
+                      {
+                        "id": "Target0",
+                        "arn": {
+                          "Fn::GetAtt": [
+                            "BillApprovedEventLambda9E1A0B6C",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_events.CfnRule",
+                  "version": "2.175.1"
+                }
+              },
+              "AllowEventRuleBillEventStackBillApprovedEventLambda8833E20D": {
+                "id": "AllowEventRuleBillEventStackBillApprovedEventLambda8833E20D",
+                "path": "BillEventStack/BillApprovedEventRule/AllowEventRuleBillEventStackBillApprovedEventLambda8833E20D",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                  "aws:cdk:cloudformation:props": {
+                    "action": "lambda:InvokeFunction",
+                    "functionName": {
+                      "Fn::GetAtt": [
+                        "BillApprovedEventLambda9E1A0B6C",
+                        "Arn"
+                      ]
+                    },
+                    "principal": "events.amazonaws.com",
+                    "sourceArn": {
+                      "Fn::GetAtt": [
+                        "BillApprovedEventRule3ACFA569",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                  "version": "2.175.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_events.Rule",
+              "version": "2.175.1"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "BillEventStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "BillEventStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.175.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.2"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "BillEventStack/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.175.1"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "BillEventStack/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.175.1"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.175.1"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.4.2"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.175.1"
+    }
+  }
+}

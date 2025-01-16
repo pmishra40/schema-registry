@@ -1,0 +1,190 @@
+{
+ "Description": "Stack for processing bill events from EventBridge",
+ "Resources": {
+  "BillApprovedEventLambdaServiceRole9051C551": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "BillEventStack/BillApprovedEventLambda/ServiceRole/Resource"
+   }
+  },
+  "BillApprovedEventLambda9E1A0B6C": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-721427272662-us-west-2",
+     "S3Key": "7a5d71282854e1e7fb0ed83cd26d64496e388d187b32b81c0f652739d01753e8.zip"
+    },
+    "Description": "Handles approved bill events from EventBridge",
+    "Environment": {
+     "Variables": {
+      "NODE_ENV": "production"
+     }
+    },
+    "Handler": "billApprovedEventConsumerLambda.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "BillApprovedEventLambdaServiceRole9051C551",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "BillApprovedEventLambdaServiceRole9051C551"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "BillEventStack/BillApprovedEventLambda/Resource",
+    "aws:asset:path": "asset.7a5d71282854e1e7fb0ed83cd26d64496e388d187b32b81c0f652739d01753e8",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "BillApprovedEventLambdaAllowEventBridge546FDC1A": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "BillApprovedEventLambda9E1A0B6C",
+      "Arn"
+     ]
+    },
+    "Principal": "events.amazonaws.com",
+    "SourceArn": {
+     "Fn::GetAtt": [
+      "BillApprovedEventRule3ACFA569",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "BillEventStack/BillApprovedEventLambda/AllowEventBridge"
+   }
+  },
+  "BillApprovedEventRule3ACFA569": {
+   "Type": "AWS::Events::Rule",
+   "Properties": {
+    "Description": "Rule for handling approved bill events",
+    "EventBusName": "homebound-events",
+    "EventPattern": {
+     "source": [
+      "homebound.bills"
+     ],
+     "detail-type": [
+      "BillApprovedEvent"
+     ]
+    },
+    "Name": "bill-approved-event-rule",
+    "State": "ENABLED",
+    "Targets": [
+     {
+      "Arn": {
+       "Fn::GetAtt": [
+        "BillApprovedEventLambda9E1A0B6C",
+        "Arn"
+       ]
+      },
+      "Id": "Target0"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "BillEventStack/BillApprovedEventRule/Resource"
+   }
+  },
+  "BillApprovedEventRuleAllowEventRuleBillEventStackBillApprovedEventLambda8833E20D7F0E0607": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "BillApprovedEventLambda9E1A0B6C",
+      "Arn"
+     ]
+    },
+    "Principal": "events.amazonaws.com",
+    "SourceArn": {
+     "Fn::GetAtt": [
+      "BillApprovedEventRule3ACFA569",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "BillEventStack/BillApprovedEventRule/AllowEventRuleBillEventStackBillApprovedEventLambda8833E20D"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/02PwQ6CMAyGn4X7qKIxelUTz2Y+ABmjkgLbErrhYdm7O5CDp69/v/xJe4DqfIKqUB8udTuUIzUQX17pQeRVHUdlmlZBfASrPTkr7m/7Pz9xMsScUxKkDETpRlzEwiT4WCtm9AzXBTnDLegB/U0xCpzRZhVl2DqZKQmJ7MKkUaydfExHtlv9JpKwrkXoeTdXl/wA7IueicopWE8GQf74BX8pFa7cAAAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "BillEventStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

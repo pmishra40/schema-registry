@@ -1,0 +1,95 @@
+{
+  "version": "39.0.0",
+  "artifacts": {
+    "BillEventStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "BillEventStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "BillEventStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://721427272662/us-west-2",
+      "properties": {
+        "templateFile": "BillEventStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::721427272662:role/cdk-hnb659fds-deploy-role-721427272662-us-west-2",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::721427272662:role/cdk-hnb659fds-cfn-exec-role-721427272662-us-west-2",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-721427272662-us-west-2/30fccd7e0ea896903bce0014ad93b9074ca16180dd4a1125564d05b79c54ab07.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "BillEventStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::721427272662:role/cdk-hnb659fds-lookup-role-721427272662-us-west-2",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "BillEventStack.assets"
+      ],
+      "metadata": {
+        "/BillEventStack/BillApprovedEventLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BillApprovedEventLambdaServiceRole9051C551"
+          }
+        ],
+        "/BillEventStack/BillApprovedEventLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BillApprovedEventLambda9E1A0B6C"
+          }
+        ],
+        "/BillEventStack/BillApprovedEventLambda/AllowEventBridge": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BillApprovedEventLambdaAllowEventBridge546FDC1A"
+          }
+        ],
+        "/BillEventStack/BillApprovedEventRule/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BillApprovedEventRule3ACFA569"
+          }
+        ],
+        "/BillEventStack/BillApprovedEventRule/AllowEventRuleBillEventStackBillApprovedEventLambda8833E20D": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BillApprovedEventRuleAllowEventRuleBillEventStackBillApprovedEventLambda8833E20D7F0E0607"
+          }
+        ],
+        "/BillEventStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/BillEventStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/BillEventStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "BillEventStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

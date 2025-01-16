@@ -1,0 +1,68 @@
+{
+  "bill": {
+    "billId": "b:456",
+    "billNumber": "BL98765-B",
+    "tradePartnerBillNumber": "BL98765",
+    "tradePartnerId": "tp:2",
+    "tradePartnerName": "West Coast Plumbing Co",
+    "billType": "STANDARD",
+    "billSource": "C2P",
+    "billDate": "2023-12-19",
+    "billStatus": "APPROVED",
+    "totalAmountInCents": 250000,
+    "isTradePartnerCredit": false,
+    "paymentTerms": "NET30",
+    "dueDate": "2024-01-18",
+    "amountPaidInCents": 0,
+    "paidDate": null,
+    "externalSystemBillId": "20001",
+    "reversalBillId": null,
+    "postedDate": "2023-12-19"
+  },
+  "project": {
+    "projectId": "p:5678",
+    "projectName": "456 Oak Avenue",
+    "lotType": "BOOL",
+    "projectStatus": "ACTIVE",
+    "warrantyStartDate": "2023-12-19",
+    "verticalCompletionDate": null
+  },
+  "lineItems": [
+    {
+      "lineId": "bli:3",
+      "amountInCents": 150000,
+      "paidInCents": 0,
+      "costCodeId": "cc:2",
+      "costCodeNumber": "2201",
+      "costClassification": "Hard",
+      "costDivision": null,
+      "costCodeVersion": 1,
+      "sourceId": "cli:3",
+      "description": "Plumbing fixtures and installation"
+    },
+    {
+      "lineId": "bli:4",
+      "amountInCents": 100000,
+      "paidInCents": 0,
+      "costCodeId": "cc:2",
+      "costCodeNumber": "2201",
+      "costClassification": "Hard",
+      "costDivision": null,
+      "costCodeVersion": 1,
+      "sourceId": "cli:4",
+      "description": "Water heater installation"
+    }
+  ],
+  "approval": {
+    "approvalStatus": "APPROVED",
+    "approvalDate": "2023-12-19T23:30:36.000Z",
+    "rejectionDate": null,
+    "rejectionReason": null
+  },
+  "eventMetadata": {
+    "idempotencyKey": "2001_1310735_20231219213036",
+    "correlationId": "corr-456",
+    "eventTimeStamp": "2023-12-19T23:30:36.223Z",
+    "schemaVersion": "1.0"
+  }
+}
